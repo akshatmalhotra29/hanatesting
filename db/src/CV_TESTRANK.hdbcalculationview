@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="com.ranknode::CV_TESTRANK" applyPrivilegeType="NONE" dataCategory="CUBE" schemaVersion="3.0" hierarchyGeneration="SQL" outputViewType="Aggregation" cacheInvalidationPeriod="NONE" enforceSqlExecution="true">
+<descriptions defaultDescription="CV_TESTRANK"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="com.ranknode::EMPLOYEE">
+    <resourceUri>com.ranknode::EMPLOYEE</resourceUri>
+  </DataSource>
+</dataSources>
+<snapshotProcedures/>
+<calculationViews>
+  <calculationView xsi:type="Calculation:ProjectionView" id="Projection_1">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="ENTITY"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="SALARY"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="com.ranknode::EMPLOYEE"/>
+  </calculationView>
+  <calculationView xsi:type="Calculation:RankView" id="Rank_1">
+    <viewAttributes>
+      <viewAttribute id="ID"/>
+      <viewAttribute id="ENTITY"/>
+      <viewAttribute id="TYPE"/>
+      <viewAttribute id="SALARY" aggregationType="sum"/>
+    </viewAttributes>
+    <calculatedViewAttributes/>
+    <input node="Projection_1"/>
+    <rankingFilter type="SUM" offset="0" offsetReference="FRONT" dynamicPartitionAttributes="false">
+      <partitionViewAttributeName id="ID"/>
+      <partitionViewAttributeName id="ENTITY"/>
+      <order byViewAttributeName="SALARY" direction="DESC"/>
+      <rankThreshold>
+        <value>100000000000</value>
+      </rankThreshold>
+      <rankViewAttributeName>Sum_Column</rankViewAttributeName>
+    </rankingFilter>
+  </calculationView>
+</calculationViews>
+
+<logicalModel id="Rank_1">
+  <attributes>
+    <attribute id="ID" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ID"/>
+      <keyMapping columnObjectName="Rank_1" columnName="ID"/>
+    </attribute>
+    <attribute id="ENTITY" order="2" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="ENTITY"/>
+      <keyMapping columnObjectName="Rank_1" columnName="ENTITY"/>
+    </attribute>
+    <attribute id="TYPE" order="3" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="TYPE"/>
+      <keyMapping columnObjectName="Rank_1" columnName="TYPE"/>
+    </attribute>
+    <attribute id="Sum_Column" order="5" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Sum_Column"/>
+      <keyMapping columnObjectName="Rank_1" columnName="Sum_Column"/>
+    </attribute>
+  </attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="SALARY" order="4" aggregationType="sum" measureType="simple" restrictionExpressionLanguage="SQL">
+      <descriptions defaultDescription="SALARY"/>
+      <measureMapping columnObjectName="Rank_1" columnName="SALARY"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    
+  
+    <shape expanded="true" modelObjectName="Projection_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="310"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+    <shape expanded="true" modelObjectName="Rank_1" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="100" y="224"/>
+      <rectangleSize height="30" width="160"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario>
